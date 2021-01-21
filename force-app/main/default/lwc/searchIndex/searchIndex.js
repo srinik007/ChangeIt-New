@@ -4,7 +4,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class SearchIndex extends LightningElement {
     @api fieldVal=''; @api fieldOptions; @api operVal='';
     @api operOptions; @api val=''; @api add; @api remove;
-    @api cmpNum; @track childIncrement; @api isInsert; @api isRemove;
+    @track childIncrement; @api isInsert; @api isRemove;
 
     @api evtAddValues;
 

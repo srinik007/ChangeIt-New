@@ -1,7 +1,7 @@
 <template>
     <div class="slds-grid slds-gutters">
         <div class="slds-col slds-size_1-of-12">
-            {cmpNum}. 
+             
         </div>
         <div class="slds-col slds-size_3-of-12">
         	<lightning-combobox name="sconfig1" label="Field" value={fieldVal} 
@@ -19,22 +19,6 @@
                 	<lightning-input name="sconfig3" label="Value" value={val} 
                             type="text" onchange={handleChange}>
                         </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-12 slds-m-top_x-large">
-                    <template if:true={isInsert}>
-                        <lightning-button-icon icon-name="utility:add" variant="bare"
-                                        onclick={sendParams} alternative-text="Add" 
-                                        title="Add" name={add}>
-                                    </lightning-button-icon>
-                    </template>
-                </div>
-                <div class="slds-col slds-size_1-of-12 slds-m-top_x-large">
-                    <template if:true={isRemove}>
-                        <lightning-button-icon icon-name="utility:close" variant="bare"
-                                              onclick={handleRemove} alternative-text="Remove" 
-                                              title="Remove" name={remove}>
-                                            </lightning-button-icon>
-                    </template>
                 </div>
             </div>
         </div>

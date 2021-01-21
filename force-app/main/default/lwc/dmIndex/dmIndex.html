@@ -1,7 +1,7 @@
 <template>
     <div class="slds-grid slds-gutters">
         <div class="slds-col slds-size_2-of-4">
-            <lightning-card title="Data Manipulation">
+            <lightning-card title="Data Clean & Manipulation">
                 <div class="slds-m-around_medium">
                     <div class="slds-theme_shade slds-p-top_xxx-small slds-p-bottom_xxx-small">
                         <p>Select Object</p>
@@ -21,107 +21,96 @@
                     </div>
                     <div class="slds-m-top_medium slds-theme_shade slds-p-top_xxx-small 
                                 slds-p-bottom_xxx-small">
-                        <p>Search Config</p>
+                        <p>Search</p>
                     </div>
                     <div class="slds-m-top_medium filterList">
-                        <c-search-index field-val={fieldVal1} field-options={fieldOptions} val={inputVal1}
-                                        oper-val={operVal1} oper-options={operOptions} cmp-num="1"
-                                        add="c1" is-insert={insertEnabled.c1} is-remove={insertDisabled.c1}
-                                        onaddcmp={handleAdd} onfieldchanged={handleFieldChange}>
-                                    </c-search-index>
-                        <template if:true={childCmp.c1}>
-                            <c-search-index field-val={fieldVal2} field-options={fieldOptions} val={inputVal2}
-                                        oper-val={operVal2} oper-options={operOptions}
-                                        onaddcmp={handleAdd}  add="c2" remove="c1" cmp-num="2"
-                                        is-insert={insertEnabled.c2} is-remove={insertDisabled.c2}>
-                                    </c-search-index>
-                        </template>
-                        <template if:true={childCmp.c2}>
-                            <c-search-index field-val={fieldVal3} field-options={fieldOptions} val={inputVal3}
-                                        oper-val={operVal3} oper-options={operOptions}
-                                        onaddcmp={handleAdd} add="c3" remove="c2" cmp-num="3"
-                                        is-insert={insertEnabled.c3} is-remove={insertDisabled.c3}>
-                                    </c-search-index>
-                        </template>
-                        <template if:true={childCmp.c3}>
-                            <c-search-index field-val={fieldVal4} field-options={fieldOptions} val={inputVal4}
-                                        oper-val={operVal4} oper-options={operOptions}
-                                        onaddcmp={handleAdd} add="c4" remove="c3" cmp-num="4"
-                                        is-insert={insertEnabled.c4} is-remove={insertDisabled.c4}>
-                                    </c-search-index>
-                        </template>
-                        <template if:true={childCmp.c4}>
-                            <c-search-index field-val={fieldVal5} field-options={fieldOptions} val={inputVal5}
-                                        oper-val={operVal5} oper-options={operOptions}
-                                        onaddcmp={handleAdd} add="c5" remove="c4" cmp-num="5"
-                                        is-insert={insertEnabled.c5} is-remove={insertDisabled.c5}>
-                                    </c-search-index>
-                        </template>
-                        <template if:true={childCmp.c5}>
-                            <c-search-index field-val={fieldVal6} field-options={fieldOptions} val={inputVal6}
-                                        oper-val={operVal6} oper-options={operOptions}
-                                        onaddcmp={handleAdd} add="c6" remove="c5" cmp-num="6"
-                                        is-insert={insertEnabled.c6} is-remove={insertDisabled.c6}>
-                                    </c-search-index>
-                        </template>
-                        <template if:true={childCmp.c6}>
-                            <c-search-index field-val={fieldVal7} field-options={fieldOptions} val={inputVal7}
-                                        oper-val={operVal7} oper-options={operOptions}
-                                        onaddcmp={handleAdd} add="c7" remove="c6" cmp-num="7"
-                                        is-insert={insertEnabled.c7} is-remove={insertDisabled.c7}>
-                                    </c-search-index>
-                        </template>
-                        <template if:true={childCmp.c7}>
-                            <c-search-index field-val={fieldVal8} field-options={fieldOptions} val={inputVal8}
-                                        oper-val={operVal8} oper-options={operOptions}
-                                        onaddcmp={handleAdd} add="c8" remove="c7" cmp-num="8"
-                                        is-insert={insertEnabled.c8} is-remove={insertDisabled.c8}>
-                                    </c-search-index>
-                        </template>
-                        <template if:true={childCmp.c8}>
-                            <c-search-index field-val={fieldVal9} field-options={fieldOptions} val={inputVal9}
-                                        oper-val={operVal9} oper-options={operOptions}
-                                        onaddcmp={handleAdd} add="c9" remove="c8" cmp-num="9"
-                                        is-insert={insertEnabled.c9} is-remove={insertDisabled.c9}>
-                                    </c-search-index>
-                        </template>
-                        <template if:true={childCmp.c9}>
-                            <c-search-index field-val={fieldVal10} field-options={fieldOptions} val={inputVal10}
-                                        oper-val={operVal10} oper-options={operOptions}
-                                        onaddcmp={handleAdd} add="c10" remove="c9" cmp-num="10"
-                                        is-insert={insertEnabled.c0} is-remove={insertDisabled.c0} >
-                                    </c-search-index>
-                        </template>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_4-of-12">
+                                <lightning-combobox name="sconfig1" label="Field" value={fieldVal} 
+                                                options={fieldOptions} onchange={handleChange}>
+                                            </lightning-combobox>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <lightning-combobox name="sconfig2" label="Operator" value={operVal} 
+                                                options={operOptions} onchange={handleChange}>
+                                            </lightning-combobox>
+                            </div>
+                            <div class="slds-col slds-size_5-of-12">
+                                <lightning-input name="sconfig3" label="Value" value={val} 
+                                    type="text" onchange={handleChange}>
+                                </lightning-input>
+                            </div>
+                        </div>
                     </div>
+                    
+                    <div class="slds-m-top_medium slds-theme_shade slds-p-top_xxx-small 
+                                slds-p-bottom_xxx-small">
+                        <p>Advanced Search</p>
+                    </div>
+                    <div class="slds-m-top_medium">
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_7-of-12">
+                                <lightning-input type="text" name="qField" value={qFields} field-level-help="FirstName,LastName"
+                                    label="Query Fields">
+                                </lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_5-of-12">
+                                <lightning-input type="text" name="qCondition" value={qConditions} field-level-help="FirstName='Test1' and LastName='Test2'"
+                                    label="Conditions">
+                                </lightning-input>
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-gutters">
+                        	<div class="slds-col slds-size_4-of-12">
+                            	<lightning-combobox name="sortField" label="Sort" value={sortField} 
+                                            options={fieldOptions}>
+                                        </lightning-combobox>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12 slds-m-top_xx-small">
+                            	<lightning-combobox name="sortLogic" label="" value={sortVal} 
+                                            options={sortOptions}>
+                                        </lightning-combobox>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-m-top_medium slds-theme_shade slds-p-top_xxx-small 
+                                slds-p-bottom_xxx-small">
+                        <p>Manipulate</p>
+                    </div>
+                    <div class="slds-m-top_medium">
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_4-of-12">
+                                <lightning-combobox name="mBox1" label="Override Field" value={overrideField} 
+                                    dropdown-alignment="auto" options={overrideOptions} onchange={handleChange}>
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-col slds-size_4-of-12">
+                                <lightning-input type="text" label="Value"
+                                             name="mBox1Text" value={overrideValue}
+                                             onchange={handleChange}>
+                                            </lightning-input>
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-gutters comboHeight">
+                            <div class="slds-col slds-size_4-of-12">
+                                <lightning-combobox name="mBox2" label="Concatenation Field" value={concateField} 
+                                    options={overrideOptions} dropdown-alignment="auto" onchange={handleChange}>
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-col slds-size_4-of-12">
+                                <lightning-input type="text" label="Value" name="mBox2Text" value={overrideValue} 
+                                        onchange={handleChange}>
+                                        </lightning-input>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="slds-m-top_small slds-align_absolute-center">
                         <lightning-button label="Preview" name="preview" variant="bare" 
                                           class="slds-m-right_small" onclick={hanldePreview}></lightning-button>
                         <lightning-button label="Save" name="save" variant="bare"
                                           class="slds-m-right_small"></lightning-button>
                         <lightning-button label="Cancel" name="cancel" variant="bare"></lightning-button>
-                    </div>
-                    <div class="slds-m-top_medium slds-theme_shade slds-p-top_xxx-small 
-                                slds-p-bottom_xxx-small">
-                        <p>Search Logic</p>
-                    </div>
-                    <div class="slds-m-top_medium">
-                        <div>
-                        	<lightning-input type="text" name="fLogic" value={filterLogic} field-level-help="1 AND 2"
-                                             label="Filter Logic" disabled={filterBool}>
-                                            </lightning-input>
-                        </div>
-                        <div class="slds-grid slds-gutters">
-                        	<div class="slds-col slds-size_2-of-5">
-                            	<lightning-combobox name="sortField" label="Sort" value={sortField} 
-                                            options={fieldOptions}>
-                                        </lightning-combobox>
-                            </div>
-                            <div class="slds-col slds-size_1-of-5 slds-m-top_xx-small">
-                            	<lightning-combobox name="sortLogic" label="" value={sortVal} 
-                                            options={sortOptions}>
-                                        </lightning-combobox>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </lightning-card>

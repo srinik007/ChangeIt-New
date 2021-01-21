@@ -5,7 +5,7 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>*</members>
+        <members>dmIndex</members>
         <name>LightningComponentBundle</name>
     </types>
     <version>50.0</version>

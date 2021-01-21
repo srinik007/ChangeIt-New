@@ -4,43 +4,19 @@ import getObjField from '@salesforce/apex/DmHome.getObjFields';
 import SearchIndex, { myCmp } from 'c/searchIndex';
 
 export default class DmHome extends LightningElement {
-    /*@track isChildCmp1=true; @track isChildCmp2=false; @track isChildCmp3=false; @track isChildCmp4=false;
-    @track isChildCmp5=false; @track isChildCmp6=false; @track isChildCmp7=false; @track isChildCmp8=false; 
-    @track isChildCmp9=false; */
 
-    @api inputVal1; @api inputVal2; @api inputVal3; @api inputVal4; @api inputVal5;
-    @api inputVal6; @api inputVal7; @api inputVal8; @api inputVal9; @api inputVal10;
+    @track objsOptions=[];  
 
-    @api fieldVal1; @api fieldVal2; @api fieldVal3; @api fieldVal4; @api fieldVal5;
-    @api fieldVal6; @api fieldVal7; @api fieldVal8; @api fieldVal9; @api fieldVal10;
-    @track selectedObj; 
-
-    @api operVal1='='; @api operVal2='='; @api operVal3='='; @api operVal4='='; @api operVal5='='; 
-    @api operVal6='='; @api operVal7='='; @api operVal8='='; @api operVal9='='; @api operVal10='=';
-    @api operOptions;
-
-    @track isChildCmp; @track sortField; @track sortVal;
-    @track recycle=false; @track purge=false; @track filterBool=false; @track isPurge=true;
-
-    @track objOptions=[]; @track tempOptions=[]; @track objsOptions=[]; @api fieldOptions=[]; @api fieldSet=[];
-
+    //Cmp variables
+    @track selectedObj; @track recycle=false; @track purge=false; @track isPurge=true;
+    @api fieldVal;@api fieldOptions=[];@api operVal='='; @api operOptions; val; @api fieldSet=[];
+    @track filterBool=false; @track sortField; @track sortVal; 
+    @track tempOptions=[];@track objOptions=[];
+    qFields;qConditions;
     @track objError; @track fieldError;
+    overrideField;concateField;overrideValue; manipulateOptions=[];
 
-    @track childCmp={c0: true,c1: false,c2: false, c3: false, c4: false, c5: false, c6: false,
-                    c7: false, c8: false, c9: false};
-    
-    @api insertEnabled={c0: false,c1: true,c2: true, c3: true, c4: true, c5: true, c6: true,
-                            c7: true, c8: true, c9: true};
-    @api insertDisabled={c0: true,c1: false,c2: true, c3: true, c4: true, c5: true, c6: true,
-                            c7: true, c8: true, c9: true};
-    
     @track operTempData={}; @api childCount=1;
-
-    childBools=[{"label":"c0","value":true},{"label":"c1","value":false},
-                {"label":"c2","value":false},{"label":"c3","value":false},
-                {"label":"c4","value":false},{"label":"c5","value":false},
-                {"label":"c6","value":false},{"label":"c7","value":false},
-                {"label":"c8","value":false},{"label":"c9","value":false}];
 
     strType=[{'label': 'equals', 'value': '='}, {'label': 'not equals', 'value': '<>'},
             {'label': 'starts with', 'value': 'like'},
@@ -80,6 +56,24 @@ export default class DmHome extends LightningElement {
         });
         return returnOptions;
     }
+    get overrideOptions(){
+        var returnOptions = [];
+        returnOptions.push({label: '',value: ''});
+        this.fieldSet.forEach(element =>{
+            if(element.label!='Id' && element.label!='IsDeleted' && element.label!='CreatedDate' && 
+                element.label!='CreatedById' && element.label!='LastModifiedDate' && element.label!='LastModifiedById' &&
+                element.label!='SystemModstamp' && element.label!='LastActivityDate' && element.label!='LastViewedDate' &&
+                element.label!='LastReferencedDate' && element.label!='DandbCompanyId' && element.label!='OperatingHoursId' && 
+                (element.value=='STRING' || element.value=='PICKLIST' || element.value=='TEXTAREA' || element.label=='ParentId' ||
+                element.value=='DOUBLE' || element.value=='PHONE' || element.value=='URL' ||
+                element.value=='CURRENCY' || element.value=='INTEGER' || element.label=='OwnerId')){
+                console.log('ele value='+element.value);
+                console.log('ele label='+element.label);
+                returnOptions.push({label: element.label, value: element.label});
+            }
+        });
+        return returnOptions;
+    }
     handleChange(evt){
         if(evt.target.name=='obj'){
             this.selectedObj=evt.target.value;
@@ -104,166 +98,38 @@ export default class DmHome extends LightningElement {
             })
         }else if(evt.target.name=='cbox1'){
             this.recycle=evt.target.checked;
-            console.log('att='+evt.target.checked);
             if(evt.target.checked==true){
                 this.isPurge=false;
             }else{
                 this.isPurge=true;
+                this.purge=false;
             }
         }else if(evt.target.name=='cbox2'){
             this.purge=evt.target.checked;
+        }else if(evt.target.name=='sconfig1'){
+            this.val=null;
+            for(var key in this.fieldSet){
+                if(this.fieldSet[key].label==evt.target.value && (this.fieldSet[key].value=="STRING" || 
+                    this.fieldSet[key].value=="Phone" || this.fieldSet[key].value=="Email" ||
+                    this.fieldSet[key].value=="TEXTAREA" || this.fieldSet[key].value=="REFERENCE" ||
+                    this.fieldSet[key].value=="ID" || this.fieldSet[key].value=="CURRENCY" ||
+                    this.fieldSet[key].value=="DOUBLE" || this.fieldSet[key].value=="DECIMAL")){
+                      this.operOptions=this.strType;
+                  }else if(this.fieldSet[key].label==evt.target.value && (this.fieldSet[key].value=="Date" || 
+                    this.fieldSet[key].value=="DATETIME")){
+                        this.operOptions=this.dateType;
+                 }else if(this.fieldSet[key].label==evt.target.value && this.fieldSet[key].value=="BOOLEAN"){
+                    this.operOptions=this.boolType;
+                 }
+            }
+        }else if(evt.target.name=='sconfig2'){
+            this.operVal=evt.target.value;
+        }else if(evt.target.name=='sconfig3'){
+            this.val=evt.target.value;
+            console.log('sconfig3='+this.val);
         }
     }
-    handleAdd(evt){
-        var sChild=evt.detail.showChild;
-        var nChild=evt.detail.childName;
-        var isPlus=evt.detail.isAdd;
-        var isCross=evt.detail.isClose;
-        var isParam=evt.detail.actionParam;
-        /*for(var key in this.operTempData){
-            console.log('add1'+key);
-            console.log('add2'+this.operTempData[key]);
-        }*/
-        for(var key in this.childCmp){
-            if(key==nChild){
-                this.childCmp[key]=sChild;
-                this.insertEnabled[key]=isPlus;
-                if(nChild!='c1'){
-                    this.insertDisabled[key]=isCross;
-                }else if(nChild=='c1' && isParam!='remove'){
-                    this.insertDisabled[key]=isCross;
-                }
-            }
-            if(isParam=='add'){
-                this.childCount++;
-            }else if(isParam=='remove'){
-                this.childCount--;
-            }
-        }
-    }
-    handleFieldChange(evt){
-        alert('received!='+evt.detail.cNum+' ='+evt.detail.cValue+' ='+evt.detail.cName);
-        for(var key in this.fieldSet){
-            if(this.fieldSet[key].label==evt.detail.cValue && (this.fieldSet[key].value=="STRING" || 
-                this.fieldSet[key].value=="Phone" || this.fieldSet[key].value=="Email" ||
-                this.fieldSet[key].value=="TEXTAREA" || this.fieldSet[key].value=="REFERENCE" ||
-                this.fieldSet[key].value=="ID" || this.fieldSet[key].value=="CURRENCY" ||
-                this.fieldSet[key].value=="DOUBLE" || this.fieldSet[key].value=="DECIMAL")){
-                  this.operOptions=this.strType;
-              }else if(this.fieldSet[key].label==evt.detail.cValue && (this.fieldSet[key].value=="Date" || 
-                this.fieldSet[key].value=="DATETIME")){
-                    this.operOptions=this.dateType;
-             }else if(this.fieldSet[key].label==evt.detail.cValue && this.fieldSet[key].value=="BOOLEAN"){
-                this.operOptions=this.boolType;
-             }
-        }
-        if(evt.detail.cNum=='1'){
-            if(evt.detail.cName=='sconfig1'){
-                this.fieldVal1=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig2'){
-                this.operVal1=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig3'){
-                this.inputVal1=evt.detail.cValue;
-            }
-         }else if(evt.detail.cNum=='2'){
-            if(evt.detail.cName=='sconfig1'){
-                this.fieldVal2=evt.detail.cValue;
-                alert('2');
-            }else if(evt.detail.cName=='sconfig2'){
-                this.operVal2=evt.detail.cValue;
-                alert('2');
-            }else if(evt.detail.cName=='sconfig3'){
-                this.inputVal2=evt.detail.cValue;
-                alert('2');
-            }
-         }else if(evt.detail.cNum=='3'){
-            if(evt.detail.cName=='sconfig1'){
-                this.fieldVal3=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig2'){
-                this.operVal3=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig3'){
-                this.inputVal3=evt.detail.cValue;
-            }
-         }else if(evt.detail.cNum=='4'){
-            if(evt.detail.cName=='sconfig1'){
-                this.fieldVal4=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig2'){
-                this.operVal4=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig3'){
-                this.inputVal4=evt.detail.cValue;
-            }
-         }else if(evt.detail.cNum=='5'){
-            if(evt.detail.cName=='sconfig1'){
-                this.fieldVal5=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig2'){
-                this.operVal5=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig3'){
-                this.inputVal5=evt.detail.cValue;
-            }
-         }else if(evt.detail.cNum=='6'){
-            if(evt.detail.cName=='sconfig1'){
-                this.fieldVal6=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig2'){
-                this.operVal6=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig3'){
-                this.inputVal6=evt.detail.cValue;
-            }
-         }else if(evt.detail.cNum=='7'){
-            if(evt.detail.cName=='sconfig1'){
-                this.fieldVal7=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig2'){
-                this.operVal7=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig3'){
-                this.inputVal7=evt.detail.cValue;
-            }
-         }else if(evt.detail.cNum=='8'){
-            if(evt.detail.cName=='sconfig1'){
-                this.fieldVal8=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig2'){
-                this.operVal8=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig3'){
-                this.inputVal8=evt.detail.cValue;
-            }
-         }else if(evt.detail.cNum=='9'){
-            if(evt.detail.cName=='sconfig1'){
-                this.fieldVal9=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig2'){
-                this.operVal9=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig3'){
-                this.inputVal9=evt.detail.cValue;
-            }
-         }else if(evt.detail.cNum=='10'){
-            if(evt.detail.cName=='sconfig1'){
-                this.fieldVal10=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig2'){
-                this.operVal10=evt.detail.cValue;
-            }else if(evt.detail.cName=='sconfig3'){
-                this.inputVal10=evt.detail.cValue;
-            }
-         }/*else if(evt.detail.cName=='sconfig2'){
-            if(evt.detail.cNum=='1'){
-                this.fieldVal1=evt.detail.cValue;
-            }else if(evt.detail.cNum=='2'){
-                this.fieldVal2=evt.detail.cValue;
-            }else if(evt.detail.cNum=='3'){
-                this.fieldVal3=evt.detail.cValue;
-            }else if(evt.detail.cNum=='4'){
-                this.fieldVal4=evt.detail.cValue;
-            }else if(evt.detail.cNum=='5'){
-                this.fieldVal5=evt.detail.cValue;
-            }else if(evt.detail.cNum=='6'){
-                this.fieldVal6=evt.detail.cValue;
-            }else if(evt.detail.cNum=='7'){
-                this.fieldVal7=evt.detail.cValue;
-            }else if(evt.detail.cNum=='8'){
-                this.fieldVal8=evt.detail.cValue;
-            }else if(evt.detail.cNum=='9'){
-                this.fieldVal9=evt.detail.cValue;
-            }else if(evt.detail.cNum=='10'){
-                this.fieldVal10=evt.detail.cValue;
-            }
-         }*/
-    }
+    
     hanldePreview(evt){
         var domElem=this.template.querySelector('c-search-index');
         if(this.selectedObj==undefined || this.selectedObj==''){
