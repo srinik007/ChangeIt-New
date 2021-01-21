@@ -142,7 +142,6 @@ export default class DmHome extends LightningElement {
             this.operVal=evt.target.value;
         }else if(evt.target.name=='sconfig3'){
             this.val=evt.target.value;
-            console.log('sconfig3='+this.val);
         }
     }
     
@@ -153,37 +152,8 @@ export default class DmHome extends LightningElement {
         }else{
             var validatePreview=false;
             var qString='Select Id from '+this.selectedObj;
-            if(this.fieldVal1!=undefined && this.inputVal1!=undefined){
-                qString+=' where '+this.fieldVal1+this.operVal1+this.inputVal1;
-                validatePreview=true;
-            }
-            if(this.fieldVal2!=undefined && this.inputVal2!=undefined){
-                alert('alert 2');
-                qString+=' and '+this.fieldVal2+this.operVal2+this.inputVal2;
-            }
-            if(this.fieldVal3!=undefined && this.inputVal3!=undefined){
-                qString+=' and '+this.fieldVal3+this.operVal3+this.inputVal3;
-            }
-            if(this.fieldVal4!=undefined && this.inputVal4!=undefined){
-                qString+=' and '+this.fieldVal4+this.operVal4+this.inputVal4;
-            }
-            if(this.fieldVal5!=undefined && this.inputVal5!=undefined){
-                qString+=' and '+this.fieldVal5+this.operVal5+this.inputVal5;
-            }
-            if(this.fieldVal6!=undefined && this.inputVal6!=undefined){
-                qString+=' and '+this.fieldVal6+this.operVal6+this.inputVal6;
-            }
-            if(this.fieldVal7!=undefined && this.inputVal7!=undefined){
-                qString+=' and '+this.fieldVal7+this.operVal7+this.inputVal7;
-            }
-            if(this.fieldVal8!=undefined && this.inputVal8!=undefined){
-                qString+=' and '+this.fieldVal8+this.operVal8+this.inputVal8;
-            }
             if(this.fieldVal9!=undefined && this.inputVal9!=undefined){
                 qString+=' and '+this.fieldVal9+this.operVal9+this.inputVal9;
-            }
-            if(this.fieldVal10!=undefined && this.inputVal10!=undefined){
-                qString+=' and '+this.fieldVal10+this.operVal10+this.inputVal10;
             }
             alert('query='+qString);
         }
