@@ -74,6 +74,16 @@ export default class DmHome extends LightningElement {
         });
         return returnOptions;
     }
+    get manipulateOptions(){
+        var returnOptions = [];
+        returnOptions.push({label: '',value: ''});
+        this.fieldSet.forEach(element =>{
+            if(element.value=='STRING' || element.value=='TEXTAREA'){
+                returnOptions.push({label: element.label, value: element.label});
+            }
+        });
+        return returnOptions;
+    }
     handleChange(evt){
         if(evt.target.name=='obj'){
             this.selectedObj=evt.target.value;
