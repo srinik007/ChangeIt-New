@@ -14,7 +14,7 @@ export default class DmHome extends LightningElement {
     @track tempOptions=[];@track objOptions=[];
     qFields;qConditions;
     @track objError; @track fieldError;
-    overrideField;concateField;overrideValue; manipulateOptions=[];
+    @track overrideField;@track concateField;@track overrideValue; @track concateOptions;
 
     @track operTempData={}; @api childCount=1;
 
@@ -67,23 +67,23 @@ export default class DmHome extends LightningElement {
                 (element.value=='STRING' || element.value=='PICKLIST' || element.value=='TEXTAREA' || element.label=='ParentId' ||
                 element.value=='DOUBLE' || element.value=='PHONE' || element.value=='URL' ||
                 element.value=='CURRENCY' || element.value=='INTEGER' || element.label=='OwnerId')){
-                console.log('ele value='+element.value);
-                console.log('ele label='+element.label);
                 returnOptions.push({label: element.label, value: element.label});
             }
         });
         return returnOptions;
-    }
+    }/*
     get manipulateOptions(){
         var returnOptions = [];
         returnOptions.push({label: '',value: ''});
         this.fieldSet.forEach(element =>{
             if(element.value=='STRING' || element.value=='TEXTAREA'){
                 returnOptions.push({label: element.label, value: element.label});
+                console.log('ele value='+element.value);
+                console.log('ele label='+element.label);
             }
         });
         return returnOptions;
-    }
+    }*/
     handleChange(evt){
         if(evt.target.name=='obj'){
             this.selectedObj=evt.target.value;
@@ -91,15 +91,21 @@ export default class DmHome extends LightningElement {
             .then(result =>{
                 const returnFields=[];
                 const returnFieldTypeSet=[];
+                const overrideData=[];
+                const concateData=[];
                 returnFields.push({label: '', value: ''});
                 for(var a in result){
                     returnFields.push({label: a, value: a});
                     returnFieldTypeSet.push({label: a, value: result[a]});
-                    //this.operTempData[a] = result[a];
+                    if(result[a]=='STRING' || result[a]=='TEXTAREA'){
+                        concateData.push({label: a, value: a});
+                        console.log('value='+result[a]);
+                        console.log('label='+a);
+                    }
                 }
                 this.fieldOptions=returnFields;
                 this.fieldSet=returnFieldTypeSet;
-                //this.setOperatorOptions();
+                this.concateOptions=concateData;
                 this.fieldError=undefined;
             })
             .catch(error =>{
